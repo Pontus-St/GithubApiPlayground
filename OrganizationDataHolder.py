@@ -41,8 +41,15 @@ class Organization:
 
         self.number2Node = {}       #listfrom index number to node object  
        
-        self.extractRepoData(queryResponse)
+        self.healthy = self.extractRepoData(queryResponse)
         
+        
+        if(len(self.repos) == 0 or len(self.members)==0):
+            self.healthy = False
+        if self.healthy:
+            print("Organization object construction done ")
+        else:
+            print("Organization object construction failed!  ")
     #extract relevant data from query response     
     def extractRepoData(self, queryResponse):
         #check expected structure:
@@ -52,7 +59,7 @@ class Organization:
             #data = repos
             #print(data,"\n",type(data), len(data))
         except Exception as e:
-            print("failed to unpack query response")
+            print("failed to unpack query response - wrong kind of query response given: \n", queryResponse)
             return False
         
         
@@ -96,17 +103,17 @@ class Organization:
                 else:
                     self.topic2Repos[topicName] = [repoBuffer.getID()]
                     self.topics.append(topicName)
+        return True
             
       
 #Debug
 if __name__ == "__main__":
-    query = DG.constructDatarequest("futurice",100,60,10)
+    query = DG.constructDatarequest("futurice",100,10,10)
     response =DG.sendRequest(query)
     print(response)
     
     
     org = Organization(response)
-    
     
     for i in org.members:
         print("member: " , i.getName()," ",i.getID())

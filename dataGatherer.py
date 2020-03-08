@@ -20,8 +20,9 @@ def sendRequest(query):
     if request.status_code == 200:
         return request.json()
     else:
-        raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
-
+        print("Query failed to run by returning code of {}. {}".format(request.status_code, query))
+        return False
+        
 '''
 Constructing the query,max number of repos, max number of members from the repos, max number of topics 
 '''
